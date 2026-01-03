@@ -63,6 +63,7 @@
             </div>
         </div>
     </footer>
+    <div class="site-overlay"></div>
 </div><!-- #page -->
 
 <?php wp_footer(); ?>

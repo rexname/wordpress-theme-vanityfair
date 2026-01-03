@@ -35,15 +35,41 @@
                 </button>
             </div>
         </div>
-        <nav id="site-navigation" class="main-navigation">
-            <?php
-                wp_nav_menu( array(
-                    'theme_location' => 'primary',
-                    'menu_id'        => 'primary-menu',
-                    'fallback_cb'    => false,
-                ) );
-            ?>
-        </nav>
-    </header>
+    </header><!-- #masthead -->
+
+    <nav class="category-bar">
+        <div class="category-bar-container">
+            <ul>
+                <?php
+                    wp_list_categories( array(
+                        'title_li' => '',
+                        'orderby'  => 'name',
+                        'show_count' => 0,
+                        'hierarchical' => 0,
+                        'depth' => 1,
+                        'hide_empty' => 1,
+                    ) );
+                ?>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="site-overlay"></div>
+
+    <nav id="site-navigation" class="main-navigation">
+        <div class="search-container-nav">
+            <?php get_search_form(); ?>
+        </div>
+        <ul>
+        <?php
+            wp_list_categories( array(
+                'title_li' => '',
+                'orderby'  => 'name',
+                'show_count' => 0,
+                'hierarchical' => 1,
+            ) );
+        ?>
+        </ul>
+    </nav><!-- #site-navigation -->
 
     <div id="content" class="site-content">

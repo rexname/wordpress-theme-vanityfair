@@ -27,16 +27,79 @@ body {
     margin: 0;
     font-family: sans-serif;
     background-color: #f2f2f2;
-    color: #333;
+    color: #061E29;
 }
 
 /*--------------------------------------------------------------
 3.0 - Header
 --------------------------------------------------------------*/
 .site-header {
-    background-color: #000;
+    background-color: #061E29;
     color: #fff;
     padding: 10px 20px;
+    position: relative;
+    top: 0;
+    z-index: 1002;
+    width: 100%;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+}
+
+.site-header.header-fixed {
+    position: fixed;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.site-header.header-hidden {
+    transform: translateY(-100%);
+}
+
+.category-bar {
+    background-color: #061E29;
+    color: #fff;
+    padding: 10px 20px;
+    position: relative;
+    top: 0;
+    z-index: 1001;
+    width: 100%;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out, top 0.3s ease-in-out;
+    border-top: 1px solid #061E29;
+}
+
+.category-bar.category-bar-fixed {
+    position: fixed;
+}
+
+.category-bar.category-bar-hidden {
+    transform: translateY(-100%);
+}
+
+.category-bar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.category-bar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-bar li {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+.category-bar a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .header-container {
@@ -114,19 +177,132 @@ body {
     margin-left: 8px;
 }
 
+.search-container-nav {
+    padding: 20px;
+    border-bottom: 1px solid #061E29;
+}
+
+.search-container-nav .search-form {
+    display: flex;
+}
+
+.search-container-nav .search-field {
+    flex-grow: 1;
+    border: 1px solid #061E29;
+    background-color: #061E29;
+    color: #fff;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.search-container-nav .search-submit {
+    background-color: #fff;
+    color: #061E29;
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
 .menu-text {
     text-transform: uppercase;
 }
 
 .main-navigation {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Start off-screen */
+    width: 400px;
+    height: 100%;
+    background-color: #061E29;
+    z-index: 1001;
+    overflow-y: auto;
+    transition: right 0.5s ease-in-out;
+}
+
+.main-navigation.toggled-on {
+    right: 0; /* Slide in */
+}
+
+.site-overlay {
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 30, 41, 0.5);
+    z-index: 1000;
+}
+
+body.menu-open .site-overlay {
+    display: block;
+}
+
+body.menu-open {
+}
+
+html.menu-open {
+    overflow: hidden;
+}
+
+.main-navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.main-navigation li {
+    border-bottom: 1px solid #061E29;
+}
+
+.main-navigation li:first-child {
+    border-top: 1px solid #061E29;
+}
+
+.main-navigation a {
+    display: block;
+    padding: 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.main-navigation .sub-menu {
+    display: none;
+}
+
+.main-navigation .menu-item-has-children > a {
+    position: relative;
+}
+
+.main-navigation .menu-item-has-children > a::after {
+    content: '+';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.main-navigation .menu-item-has-children.toggled-on > a::after {
+    content: '-';
+}
+
+.main-navigation .menu-item-has-children.toggled-on > .sub-menu {
+    display: block;
+}
+
+.main-navigation .sub-menu a {
+    padding-left: 40px;
+    font-size: 16px;
+    font-weight: normal;
 }
 
 /*--------------------------------------------------------------
 4.0 - Footer
 --------------------------------------------------------------*/
 .site-footer {
-    background-color: #1a1a1a;
+    background-color: #061E29;
     color: #fff;
     padding: 40px 20px;
 }
@@ -135,7 +311,7 @@ body {
     display: flex;
     justify-content: space-between;
     padding-bottom: 40px;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid #061E29;
     max-width: 1200px;
     margin: 0 auto;
 }
