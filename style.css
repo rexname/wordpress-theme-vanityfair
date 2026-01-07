@@ -73,7 +73,7 @@ img {
     z-index: 1001;
     width: 100%;
     transform: translateY(0);
-    transition: transform 0.3s ease-in-out, top 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
     border-top: 1px solid #061E29;
 }
 
@@ -225,6 +225,7 @@ img {
     background-color: #061E29;
     z-index: 1001;
     overflow-y: auto;
+    overscroll-behavior: contain;
     transition: right 0.5s ease-in-out;
 }
 
@@ -251,7 +252,6 @@ body.menu-open {
 }
 
 html.menu-open {
-    overflow: hidden;
 }
 
 .main-navigation ul {
@@ -777,7 +777,7 @@ html.menu-open {
 .bestof-thumbnail img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
@@ -835,6 +835,10 @@ html.menu-open {
     text-decoration: none;
     font-weight: 700;
     letter-spacing: 1px;
+}
+
+.main-column-left .entry-meta a {
+    text-decoration: none;
 }
 
 .main-column-right .post {
@@ -1466,7 +1470,46 @@ html.menu-open {
 /*--------------------------------------------------------------
 4.0 - Media Queries
 --------------------------------------------------------------*/
+@media (max-width: 960px) {
+    .main-content-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .main-column-center {
+        order: 1;
+    }
+
+    .main-column-left {
+        order: 2;
+    }
+
+    .main-column-right {
+        order: 3;
+    }
+
+    .home-hero .entry-title {
+        font-size: 32px;
+    }
+}
+
 @media (max-width: 640px) {
+    .main-content-grid {
+        gap: 24px;
+    }
+
+    .home-hero .entry-title {
+        font-size: 26px;
+    }
+
+    .home-center-card {
+        gap: 12px;
+    }
+
+    .home-center-card .post-thumbnail {
+        width: 96px;
+    }
+
     .footer-main {
         flex-direction: column;
         align-items: center;
@@ -1533,7 +1576,7 @@ html.menu-open {
     }
 
     .category-bar ul {
-        display: flex;
+        display: inline-flex;
         flex-wrap: nowrap;
         padding-bottom: 10px;
         margin-bottom: -10px;
@@ -1628,4 +1671,18 @@ html.menu-open {
         flex: 0 0 85%;
         min-width: 260px;
     }
+
+    .bestof-track {
+        padding-left: 20px;
+        padding-right: 20px;
+        scroll-padding-left: 20px;
+        scroll-padding-right: 20px;
+    }
+
+    .bestof-card {
+        flex: 0 0 calc(100% - 40px);
+        min-width: 0;
+        scroll-snap-align: center;
+    }
+
 }

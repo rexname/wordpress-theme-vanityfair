@@ -16,6 +16,26 @@
             siteNavigation.style.top = headerHeight + 'px';
         }
 
+        function closeMenu() {
+            if ( ! siteNavigation.classList.contains( 'toggled-on' ) ) {
+                return;
+            }
+
+            document.documentElement.classList.remove( 'menu-open' );
+            siteNavigation.classList.remove( 'toggled-on' );
+            siteOverlay.style.display = 'none';
+            menuToggle.setAttribute( 'aria-expanded', 'false' );
+
+            if ( menuText ) {
+                menuText.textContent = 'Menu';
+            }
+
+            const currentIcon = menuToggle.querySelector( 'svg' );
+            if ( currentIcon && menuIconHTML ) {
+                currentIcon.outerHTML = menuIconHTML;
+            }
+        }
+
         menuToggle.addEventListener( 'click', function() {
             document.documentElement.classList.toggle( 'menu-open' );
             siteNavigation.classList.toggle( 'toggled-on' );
@@ -43,7 +63,7 @@
         } );
 
         siteOverlay.addEventListener( 'click', function() {
-            menuToggle.click();
+            closeMenu();
         } );
 
         window.addEventListener( 'load', updateMenuPosition );
@@ -59,6 +79,10 @@
             window.addEventListener( 'scroll', function() {
                 let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 const headerHeight = header.offsetHeight;
+
+                if ( siteNavigation.classList.contains( 'toggled-on' ) ) {
+                    closeMenu();
+                }
 
                 if ( scrollTop > headerOffset ) {
                     header.classList.add( 'header-fixed' );
