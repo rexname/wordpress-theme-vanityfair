@@ -35,6 +35,8 @@ endif;
 add_action( 'after_setup_theme', 'vanityfair_seo_setup' );
 
 function vanityfair_seo_scripts() {
+    wp_enqueue_style( 'vanityfair-fonts-gfs-didot', 'https://fonts.googleapis.com/css2?family=GFS+Didot&display=swap', array(), null );
+
     // Enqueue main stylesheet.
     wp_enqueue_style( 'vanityfair-seo-style', get_stylesheet_uri() );
 
@@ -45,6 +47,21 @@ function vanityfair_seo_scripts() {
     ) );
 }
 add_action( 'wp_enqueue_scripts', 'vanityfair_seo_scripts' );
+
+function vanityfair_resource_hints( $urls, $relation_type ) {
+    if ( 'preconnect' !== $relation_type ) {
+        return $urls;
+    }
+
+    $urls[] = 'https://fonts.googleapis.com';
+    $urls[] = array(
+        'href'        => 'https://fonts.gstatic.com',
+        'crossorigin' => 'anonymous',
+    );
+
+    return $urls;
+}
+add_filter( 'wp_resource_hints', 'vanityfair_resource_hints', 10, 2 );
 
 function vanityfair_load_more_category() {
     $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
