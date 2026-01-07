@@ -315,6 +315,89 @@
         } );
     }
 
+    function initSearchLoadMore() {
+        const btn = document.querySelector( '.js-search-load-more' );
+        if ( ! btn ) return;
+
+        const wrap = btn.closest( '.category-load-more-wrap' );
+
+        const boxesWrap = document.querySelector( '[data-category-boxes]' );
+        if ( ! boxesWrap ) return;
+
+        const ajaxUrl = window.vanityfairTheme && window.vanityfairTheme.ajaxUrl;
+        if ( ! ajaxUrl ) return;
+
+        let isLoading = false;
+
+        function setLoading( loading ) {
+            isLoading = loading;
+            btn.disabled = loading;
+            if ( loading ) {
+                btn.classList.add( 'is-loading' );
+            } else {
+                btn.classList.remove( 'is-loading' );
+            }
+        }
+
+        btn.addEventListener( 'click', function() {
+            if ( isLoading ) return;
+
+            setLoading( true );
+
+            const params = new URLSearchParams();
+            params.set( 'action', 'vanityfair_load_more_search' );
+            params.set( 'nonce', btn.dataset.nonce || '' );
+            params.set( 's', btn.dataset.s || '' );
+            params.set( 'offset', btn.dataset.offset || '0' );
+            params.set( 'heroId', btn.dataset.heroId || '0' );
+
+            fetch( ajaxUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                },
+                body: params.toString(),
+            } )
+                .then( function( res ) {
+                    return res.json();
+                } )
+                .then( function( data ) {
+                    if ( ! data || ! data.success || ! data.data ) {
+                        throw new Error( 'request_failed' );
+                    }
+
+                    const html = data.data.html || '';
+                    if ( html ) {
+                        const tmp = document.createElement( 'div' );
+                        tmp.innerHTML = html;
+                        while ( tmp.firstChild ) {
+                            boxesWrap.appendChild( tmp.firstChild );
+                        }
+                    }
+
+                    const nextOffset = typeof data.data.nextOffset === 'number' ? data.data.nextOffset : parseInt( btn.dataset.offset || '0', 10 ) + 5;
+                    btn.dataset.offset = String( nextOffset );
+
+                    if ( ! data.data.hasMore ) {
+                        if ( wrap ) {
+                            wrap.remove();
+                        } else {
+                            btn.remove();
+                        }
+                    }
+                } )
+                .catch( function() {
+                    setLoading( false );
+                } )
+                .finally( function() {
+                    if ( document.body.contains( btn ) ) {
+                        setLoading( false );
+                    }
+                } );
+        } );
+    }
+
     initBestofCarousel();
     initCategoryLoadMore();
+    initSearchLoadMore();
 } )();

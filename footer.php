@@ -59,7 +59,15 @@
                 ?>
             </div>
             <div class="footer-copyright">
-                <p>&copy; <?php echo date('Y'); ?> Condé Nast. All rights reserved. Vanity Fair may earn a portion of sales from products that are purchased through our site as part of our Affiliate Partnerships with retailers. The material on this site may not be reproduced, distributed, transmitted, cached or otherwise used, except with the prior written permission of Condé Nast. <a href="#">Ad Choices</a></p>
+                <p>
+                    &copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>.
+                    <?php
+                    printf(
+                        esc_html__( 'Proudly powered by %s', 'vanityfair-seo' ),
+                        '<a href="' . esc_url( __( 'https://wordpress.org/', 'vanityfair-seo' ) ) . '">WordPress</a>'
+                    );
+                    ?>
+                </p>
             </div>
         </div>
     </footer>

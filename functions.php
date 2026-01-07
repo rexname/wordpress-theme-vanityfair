@@ -153,6 +153,95 @@ function vanityfair_load_more_category() {
 add_action( 'wp_ajax_vanityfair_load_more_category', 'vanityfair_load_more_category' );
 add_action( 'wp_ajax_nopriv_vanityfair_load_more_category', 'vanityfair_load_more_category' );
 
+function vanityfair_load_more_search() {
+    $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+    if ( ! wp_verify_nonce( $nonce, 'vanityfair_load_more_search' ) ) {
+        wp_send_json_error( array( 'message' => 'invalid_nonce' ), 403 );
+    }
+
+    $search_query = isset( $_POST['s'] ) ? sanitize_text_field( wp_unslash( $_POST['s'] ) ) : '';
+    $offset       = isset( $_POST['offset'] ) ? absint( $_POST['offset'] ) : 0;
+    $hero_id      = isset( $_POST['heroId'] ) ? absint( $_POST['heroId'] ) : 0;
+
+    if ( $search_query === '' ) {
+        wp_send_json_error( array( 'message' => 'invalid_search' ), 400 );
+    }
+
+    $query_args = array(
+        'posts_per_page'      => 6,
+        'ignore_sticky_posts' => 1,
+        'post_status'         => 'publish',
+        's'                   => $search_query,
+        'offset'              => $offset,
+    );
+    if ( $hero_id ) {
+        $query_args['post__not_in'] = array( $hero_id );
+    }
+
+    $q        = new WP_Query( $query_args );
+    $has_more = $q->post_count > 5;
+
+    $html = '';
+    if ( $q->have_posts() ) {
+        ob_start();
+        $count       = 0;
+        $search_title = $search_query !== '' ? sprintf( 'Search: %s', $search_query ) : 'Search';
+        ?>
+        <div class="category-box">
+            <div class="category-box-grid">
+                <section class="category-posts">
+                    <div class="category-list">
+                        <?php
+                        while ( $q->have_posts() && $count < 5 ) {
+                            $q->the_post();
+                            $count++;
+                            ?>
+                            <article id="post-<?php the_ID(); ?>" <?php post_class( 'category-list-item' ); ?>>
+                                <?php if ( has_post_thumbnail() ) : ?>
+                                    <div class="category-list-thumbnail">
+                                        <a href="<?php the_permalink(); ?>">
+                                            <?php the_post_thumbnail( 'large' ); ?>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="category-list-body">
+                                    <div class="category-list-kicker"><?php echo esc_html( $search_title ); ?></div>
+                                    <?php
+                                    the_title( '<h3 class="category-list-title"><a href="' . esc_url( get_permalink() ) . '">', '</a></h3>' );
+                                    ?>
+                                    <div class="category-list-excerpt">
+                                        <?php echo wp_kses_post( wp_trim_words( get_the_excerpt(), 22 ) ); ?>
+                                    </div>
+                                    <div class="category-list-meta">By <?php the_author(); ?></div>
+                                </div>
+                            </article>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </section>
+
+                <aside class="category-ad" aria-label="Iklan">
+                    <div class="ad-slot ad-slot-vertical"></div>
+                </aside>
+            </div>
+        </div>
+        <?php
+
+        wp_reset_postdata();
+        $html = ob_get_clean();
+    }
+
+    wp_send_json_success( array(
+        'html'       => $html,
+        'hasMore'    => $has_more,
+        'nextOffset' => $offset + 5,
+    ) );
+}
+add_action( 'wp_ajax_vanityfair_load_more_search', 'vanityfair_load_more_search' );
+add_action( 'wp_ajax_nopriv_vanityfair_load_more_search', 'vanityfair_load_more_search' );
+
 function vanityfair_get_svg( $icon_name ) {
     $svg_icons = array(
         'facebook'  => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2C6.477,2,2,6.477,2,12c0,5.013,3.693,9.153,8.505,9.876V14.65H8.031v-2.629h2.474v-1.749 c0-2.896,1.411-4.167,3.818-4.167c1.153,0,1.762,0.085,2.051,0.124v2.294h-1.642c-1.022,0-1.379,0.969-1.379,2.061v1.437h2.995 l-0.406,2.629h-2.588v7.247C18.235,21.236,22,17.062,22,12C22,6.477,17.523,2,12,2z"></path></svg>',
