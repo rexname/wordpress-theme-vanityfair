@@ -80,6 +80,12 @@
                 let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 const headerHeight = header.offsetHeight;
 
+                const delta = scrollTop - lastScrollTop;
+                if ( Math.abs( delta ) < 5 ) {
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+                    return;
+                }
+
                 if ( siteNavigation.classList.contains( 'toggled-on' ) ) {
                     closeMenu();
                 }
@@ -93,7 +99,7 @@
                     scrollPosOnCatBarHidden = 0;
                 }
 
-                if ( scrollTop > headerOffset && scrollTop > lastScrollTop ) {
+                if ( scrollTop > headerOffset && delta > 0 ) {
                     if ( ! categoryBar.classList.contains( 'category-bar-hidden' ) ) {
                         categoryBar.classList.add( 'category-bar-hidden' );
                         scrollPosOnCatBarHidden = scrollTop;
@@ -102,7 +108,7 @@
                             header.classList.add( 'header-hidden' );
                         }
                     }
-                } else if ( scrollTop < lastScrollTop ) {
+                } else if ( delta < 0 ) {
                     if ( header.classList.contains( 'header-hidden' ) ) {
                         header.classList.remove( 'header-hidden' );
                     } else {

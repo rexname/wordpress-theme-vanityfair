@@ -60,13 +60,7 @@
             </div>
             <div class="footer-copyright">
                 <p>
-                    &copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>.
-                    <?php
-                    printf(
-                        esc_html__( 'Proudly powered by %s', 'vanityfair-seo' ),
-                        '<a href="' . esc_url( __( 'https://wordpress.org/', 'vanityfair-seo' ) ) . '">WordPress</a>'
-                    );
-                    ?>
+                    &copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. All rights reserved.
                 </p>
             </div>
         </div>
