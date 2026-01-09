@@ -65,6 +65,21 @@ function vanityfair_resource_hints( $urls, $relation_type ) {
 }
 add_filter( 'wp_resource_hints', 'vanityfair_resource_hints', 10, 2 );
 
+function vanityfair_style_loader_tag( $html, $handle, $href, $media ) {
+    if ( 'vanityfair-fonts-gfs-didot' !== $handle ) {
+        return $html;
+    }
+
+    $href = esc_url( $href );
+
+    $preload_tag = "<link rel='preload' as='style' href='{$href}' />\n";
+    $stylesheet_tag = "<link rel='stylesheet' href='{$href}' media='print' onload=\"this.media='all'\" />\n";
+    $noscript_tag = "<noscript><link rel='stylesheet' href='{$href}' /></noscript>\n";
+
+    return $preload_tag . $stylesheet_tag . $noscript_tag;
+}
+add_filter( 'style_loader_tag', 'vanityfair_style_loader_tag', 10, 4 );
+
 function vanityfair_load_more_category() {
     $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
     if ( ! wp_verify_nonce( $nonce, 'vanityfair_load_more_category' ) ) {
