@@ -32,7 +32,7 @@ get_header();
                     <?php if ( has_post_thumbnail() ) : ?>
                         <div class="category-hero-thumbnail">
                             <a href="<?php the_permalink(); ?>">
-                                <?php the_post_thumbnail( 'large' ); ?>
+                                <?php the_post_thumbnail( 'large', array( 'loading' => 'eager', 'fetchpriority' => 'high', 'decoding' => 'async' ) ); ?>
                             </a>
                         </div>
                     <?php endif; ?>
@@ -86,7 +86,7 @@ get_header();
                                                     <?php if ( has_post_thumbnail() ) : ?>
                                                         <div class="category-list-thumbnail">
                                                             <a href="<?php the_permalink(); ?>">
-                                                                <?php the_post_thumbnail( 'large' ); ?>
+                                                                <?php the_post_thumbnail( 'large', array( 'loading' => 'lazy', 'decoding' => 'async' ) ); ?>
                                                             </a>
                                                         </div>
                                                     <?php endif; ?>

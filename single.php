@@ -65,7 +65,7 @@ get_header();
 
                             <?php if ( has_post_thumbnail() ) : ?>
                                 <div class="single-thumbnail">
-                                    <?php the_post_thumbnail( 'large' ); ?>
+                                    <?php the_post_thumbnail( 'large', array( 'loading' => 'eager', 'fetchpriority' => 'high', 'decoding' => 'async' ) ); ?>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -92,7 +92,7 @@ get_header();
                                                             <?php if ( has_post_thumbnail() ) : ?>
                                                                 <div class="single-popular-thumb">
                                                                     <a href="<?php the_permalink(); ?>">
-                                                                        <?php the_post_thumbnail( 'thumbnail' ); ?>
+                                                                        <?php the_post_thumbnail( 'thumbnail', array( 'loading' => 'lazy', 'decoding' => 'async' ) ); ?>
                                                                     </a>
                                                                 </div>
                                                             <?php endif; ?>
@@ -162,7 +162,7 @@ get_header();
                                             <a href="<?php the_permalink(); ?>" class="single-readmore-media-link" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
                                                 <?php
                                                 if ( has_post_thumbnail() ) {
-                                                    the_post_thumbnail( 'medium_large', array( 'class' => 'single-readmore-img' ) );
+                                                    the_post_thumbnail( 'medium_large', array( 'class' => 'single-readmore-img', 'loading' => 'lazy', 'decoding' => 'async' ) );
                                                 }
                                                 ?>
                                             </a>

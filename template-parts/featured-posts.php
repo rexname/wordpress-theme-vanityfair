@@ -16,7 +16,7 @@ if ( $featured_posts_query->have_posts() ) : ?>
                 <article id="post-<?php the_ID(); ?>" <?php post_class( 'featured-post-' . $post_counter ); ?>>
                     <div class="post-thumbnail">
                         <a href="<?php the_permalink(); ?>">
-                            <?php the_post_thumbnail( 'large' ); ?>
+                            <?php the_post_thumbnail( 'large', array( 'loading' => 'lazy', 'decoding' => 'async' ) ); ?>
                         </a>
                     </div>
                     <header class="entry-header">
