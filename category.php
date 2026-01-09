@@ -105,10 +105,6 @@ get_header();
                                             <?php wp_reset_postdata(); ?>
                                         </div>
                                     </section>
-
-                                    <aside class="category-ad" aria-label="Iklan">
-                                        <div class="ad-slot ad-slot-vertical"></div>
-                                    </aside>
                                 </div>
                             </div>
                         <?php endforeach; ?>

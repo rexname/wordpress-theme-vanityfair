@@ -206,7 +206,7 @@ get_header();
                                         <?php if ( has_post_thumbnail() ) : ?>
                                             <div class="bestof-thumbnail">
                                                 <a href="<?php the_permalink(); ?>">
-                                                    <?php the_post_thumbnail( 'large' ); ?>
+                                                    <?php the_post_thumbnail( 'medium_large' ); ?>
                                                 </a>
                                             </div>
                                         <?php endif; ?>
@@ -297,7 +297,7 @@ get_header();
                                                 <?php if ( has_post_thumbnail() ) : ?>
                                                     <div class="category-card-thumbnail">
                                                         <a href="<?php the_permalink(); ?>">
-                                                            <?php the_post_thumbnail( 'large' ); ?>
+                                                            <?php the_post_thumbnail( 'medium_large' ); ?>
                                                         </a>
                                                     </div>
                                                 <?php endif; ?>
@@ -319,10 +319,6 @@ get_header();
                                         ?>
                                     </div>
                                 </section>
-
-                                <aside class="category-ad" aria-label="Iklan">
-                                    <div class="ad-slot ad-slot-vertical"></div>
-                                </aside>
                             </div>
                         </div>
                     </section>

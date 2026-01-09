@@ -598,11 +598,6 @@ html.menu-open {
     align-items: start;
 }
 
-.category-box .category-ad {
-    position: sticky;
-    top: 120px;
-}
-
 .category-load-more-wrap {
     margin-top: 26px;
     display: flex;
@@ -698,27 +693,6 @@ html.menu-open {
 
 .category-pagination {
     margin-top: 26px;
-}
-
-.category-ad {
-    position: sticky;
-    top: 120px;
-}
-
-.ad-slot {
-    width: 100%;
-    background: #eee;
-    border: 1px solid #ddd;
-}
-
-.ad-slot-vertical {
-    aspect-ratio: 300 / 600;
-    min-height: 420px;
-}
-
-.ad-slot-horizontal {
-    aspect-ratio: 970 / 250;
-    min-height: 90px;
 }
 
 .bestof-section {
@@ -1094,12 +1068,6 @@ html.menu-open {
 .single-sidebar-bottom {
 }
 
-.single-sidebar-ad-bottom {
-    position: sticky;
-    top: 120px;
-    align-self: start;
-}
-
 .single-most-popular {
     border-top: 2px solid #111;
     padding-top: 18px;
@@ -1273,16 +1241,6 @@ html.menu-open {
     font-size: 10px;
     text-transform: uppercase;
     color: #888;
-}
-
-.single-bottom-ads {
-    margin-top: 54px;
-    display: grid;
-    gap: 18px;
-}
-
-.single-bottom-ad {
-    width: 100%;
 }
 
 
@@ -1659,10 +1617,6 @@ html.menu-open {
         grid-template-columns: 1fr;
     }
 
-    .category-ad {
-        position: static;
-    }
-
     .category-box-grid {
         grid-template-columns: 1fr;
         gap: 24px;
@@ -1695,9 +1649,6 @@ html.menu-open {
         position: static;
     }
 
-    .single-sidebar-ad-bottom {
-        position: static;
-    }
 
     .single-readmore-grid {
         grid-template-columns: 1fr 1fr;
@@ -1712,10 +1663,6 @@ html.menu-open {
     .category-posts-grid {
         grid-template-columns: 1fr;
         gap: 24px;
-    }
-
-    .category-ad {
-        position: static;
     }
 
     .bestof-card {

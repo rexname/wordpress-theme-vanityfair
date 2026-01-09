@@ -134,10 +134,6 @@ function vanityfair_load_more_category() {
                         ?>
                     </div>
                 </section>
-
-                <aside class="category-ad" aria-label="Iklan">
-                    <div class="ad-slot ad-slot-vertical"></div>
-                </aside>
             </div>
         </div>
         <?php
@@ -223,10 +219,6 @@ function vanityfair_load_more_search() {
                         ?>
                     </div>
                 </section>
-
-                <aside class="category-ad" aria-label="Iklan">
-                    <div class="ad-slot ad-slot-vertical"></div>
-                </aside>
             </div>
         </div>
         <?php

@@ -79,10 +79,6 @@ get_header();
 
                             <aside class="single-sidebar" aria-label="Sidebar">
                                 <div class="single-sidebar-top">
-                                    <div class="single-sidebar-ad single-sidebar-ad-top">
-                                        <div class="ad-slot ad-slot-vertical"></div>
-                                    </div>
-
                                     <?php if ( $popular_query && $popular_query->have_posts() ) : ?>
                                         <section class="single-most-popular" aria-label="Most Popular">
                                             <div class="single-most-popular-header">MOST POPULAR</div>
@@ -123,12 +119,6 @@ get_header();
                                             </div>
                                         </section>
                                     <?php endif; ?>
-                                </div>
-
-                                <div class="single-sidebar-bottom">
-                                    <div class="single-sidebar-ad single-sidebar-ad-bottom">
-                                        <div class="ad-slot ad-slot-vertical"></div>
-                                    </div>
                                 </div>
                             </aside>
                         </div>
@@ -195,15 +185,6 @@ get_header();
                             </div>
                         </section>
                     <?php endif; ?>
-
-                    <section class="single-bottom-ads" aria-label="Iklan">
-                        <div class="single-bottom-ad">
-                            <div class="ad-slot ad-slot-horizontal"></div>
-                        </div>
-                        <div class="single-bottom-ad">
-                            <div class="ad-slot ad-slot-horizontal"></div>
-                        </div>
-                    </section>
 
                     <?php
                 endwhile;
