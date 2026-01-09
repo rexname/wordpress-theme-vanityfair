@@ -14,6 +14,8 @@ if ( ! function_exists( 'vanityfair_seo_setup' ) ) :
         // Enable support for Post Thumbnails on posts and pages.
         add_theme_support( 'post-thumbnails' );
 
+        add_theme_support( 'custom-logo' );
+
         // This theme uses wp_nav_menu() in one location.
         register_nav_menus( array(
             'primary' => esc_html__( 'Primary Menu', 'vanityfair-seo' ),

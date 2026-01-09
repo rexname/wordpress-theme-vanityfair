@@ -2,6 +2,8 @@
     const menuToggle = document.querySelector( '.menu-toggle' );
     const siteNavigation = document.querySelector( '#site-navigation' );
     const siteHeader = document.querySelector( '.site-header' );
+    const headerNav = document.querySelector( '.header-nav' );
+    const categoryBar = document.querySelector( '.category-bar' );
     const siteOverlay = document.querySelector( '.site-overlay' );
 
     if ( menuToggle && siteNavigation && siteHeader && siteOverlay ) {
@@ -11,9 +13,55 @@
         const closeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"></path></svg>`;
         const menuIconHTML = menuIcon ? menuIcon.outerHTML : '';
 
+        let headerAHeight = 0;
+        let headerBHeight = 0;
+        let headerFullHeight = 0;
+        let headerStep = 2;
+
+        let downDistance = 0;
+        let upDistance = 0;
+
+        function measureHeaderHeights() {
+            if ( ! headerNav || ! categoryBar ) {
+                headerAHeight = siteHeader.offsetHeight;
+                headerBHeight = 0;
+                headerFullHeight = headerAHeight;
+                return;
+            }
+
+            const prevHeight = headerNav.style.height;
+            headerNav.style.height = '';
+
+            headerAHeight = siteHeader.offsetHeight;
+            headerBHeight = categoryBar.offsetHeight;
+            headerFullHeight = headerAHeight + headerBHeight;
+
+            headerNav.style.height = prevHeight;
+        }
+
+        function getHeightForStep( step ) {
+            if ( step >= 2 ) return headerFullHeight;
+            if ( step === 1 ) return headerAHeight;
+            return 0;
+        }
+
+        function applyHeaderStep( step ) {
+            const maxStep = headerBHeight > 0 ? 2 : 1;
+            headerStep = Math.max( 0, Math.min( maxStep, step ) );
+            const currentHeight = getHeightForStep( headerStep );
+
+            if ( headerNav ) {
+                headerNav.style.height = currentHeight + 'px';
+            }
+
+            siteNavigation.style.top = currentHeight + 'px';
+            document.documentElement.style.setProperty( '--header-nav-height', headerFullHeight + 'px' );
+            document.documentElement.style.setProperty( '--header-nav-offset', currentHeight + 'px' );
+        }
+
         function updateMenuPosition() {
-            const headerHeight = siteHeader.offsetHeight;
-            siteNavigation.style.top = headerHeight + 'px';
+            measureHeaderHeights();
+            applyHeaderStep( headerStep );
         }
 
         function closeMenu() {
@@ -40,6 +88,14 @@
             document.documentElement.classList.toggle( 'menu-open' );
             siteNavigation.classList.toggle( 'toggled-on' );
             siteOverlay.style.display = siteNavigation.classList.contains( 'toggled-on' ) ? 'block' : 'none';
+
+            if ( siteNavigation.classList.contains( 'toggled-on' ) ) {
+                downDistance = 0;
+                upDistance = 0;
+                applyHeaderStep( 2 );
+            }
+
+            updateMenuPosition();
 
             const isExpanded = menuToggle.getAttribute( 'aria-expanded' ) === 'true';
             menuToggle.setAttribute( 'aria-expanded', ! isExpanded );
@@ -69,69 +125,73 @@
         window.addEventListener( 'load', updateMenuPosition );
         window.addEventListener( 'resize', updateMenuPosition );
 
-        let lastScrollTop = 0;
-        const header = document.querySelector( '.site-header' );
-        const categoryBar = document.querySelector( '.category-bar' );
-        const headerOffset = header ? header.offsetTop : 0;
-        let scrollPosOnCatBarHidden = 0;
+        let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+        let rafId = 0;
 
-        if ( header && categoryBar ) {
-            window.addEventListener( 'scroll', function() {
-                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const headerHeight = header.offsetHeight;
+        function handleScroll() {
+            rafId = 0;
 
-                const delta = scrollTop - lastScrollTop;
-                if ( Math.abs( delta ) < 5 ) {
-                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+            const delta = scrollTop - lastScrollTop;
+            lastScrollTop = scrollTop;
+
+            if ( siteNavigation.classList.contains( 'toggled-on' ) ) {
+                return;
+            }
+
+            if ( scrollTop <= 0 ) {
+                downDistance = 0;
+                upDistance = 0;
+                applyHeaderStep( 2 );
+                return;
+            }
+
+            if ( Math.abs( delta ) < 6 ) {
+                return;
+            }
+
+            const stepMultiplier = 4;
+
+            if ( delta > 0 ) {
+                downDistance += delta;
+                upDistance = 0;
+
+                if ( headerStep === 2 && downDistance >= ( headerBHeight * stepMultiplier ) ) {
+                    downDistance = 0;
+                    applyHeaderStep( 1 );
                     return;
                 }
 
-                if ( siteNavigation.classList.contains( 'toggled-on' ) ) {
-                    closeMenu();
+                if ( headerStep === 1 && downDistance >= ( headerAHeight * stepMultiplier ) ) {
+                    downDistance = 0;
+                    applyHeaderStep( 0 );
                 }
 
-                if ( scrollTop > headerOffset ) {
-                    header.classList.add( 'header-fixed' );
-                    categoryBar.classList.add( 'category-bar-fixed' );
-                } else {
-                    header.classList.remove( 'header-fixed', 'header-hidden' );
-                    categoryBar.classList.remove( 'category-bar-fixed', 'category-bar-hidden' );
-                    scrollPosOnCatBarHidden = 0;
-                }
+                return;
+            }
 
-                if ( scrollTop > headerOffset && delta > 0 ) {
-                    if ( ! categoryBar.classList.contains( 'category-bar-hidden' ) ) {
-                        categoryBar.classList.add( 'category-bar-hidden' );
-                        scrollPosOnCatBarHidden = scrollTop;
-                    } else {
-                        if ( scrollPosOnCatBarHidden > 0 && scrollTop > scrollPosOnCatBarHidden + ( headerHeight * 3 ) ) {
-                            header.classList.add( 'header-hidden' );
-                        }
-                    }
-                } else if ( delta < 0 ) {
-                    if ( header.classList.contains( 'header-hidden' ) ) {
-                        header.classList.remove( 'header-hidden' );
-                    } else {
-                        if ( categoryBar.classList.contains( 'category-bar-hidden' ) ) {
-                            categoryBar.classList.remove( 'category-bar-hidden' );
-                            scrollPosOnCatBarHidden = 0;
-                        }
-                    }
-                }
+            upDistance += Math.abs( delta );
+            downDistance = 0;
 
-                if ( categoryBar.classList.contains( 'category-bar-fixed' ) ) {
-                    if ( header.classList.contains( 'header-hidden' ) ) {
-                        categoryBar.style.top = '0px';
-                    } else {
-                        categoryBar.style.top = `${headerHeight}px`;
-                    }
-                } else {
-                    categoryBar.style.top = '';
-                }
+            if ( headerStep === 0 && upDistance >= ( headerAHeight * stepMultiplier ) ) {
+                upDistance = 0;
+                applyHeaderStep( 1 );
+                return;
+            }
 
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-            }, false );
+            if ( headerStep === 1 && upDistance >= ( headerBHeight * stepMultiplier ) ) {
+                upDistance = 0;
+                applyHeaderStep( 2 );
+            }
         }
+
+        window.addEventListener( 'scroll', function() {
+            if ( rafId ) return;
+            rafId = window.requestAnimationFrame( handleScroll );
+        }, { passive: true } );
+
+        measureHeaderHeights();
+        applyHeaderStep( 2 );
     }
 
     function initBestofCarousel() {
